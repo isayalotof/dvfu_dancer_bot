@@ -11,62 +11,9 @@ c.execute("""CREATE TABLE IF NOT EXISTS user(
     count_rec integer
     )""")
 
-c.execute("""CREATE TABLE IF NOT EXISTS Monday(
-    monday_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    place text,
-    time text,
-    free int
-    username text,
-    people text
-    )""")
-
-c.execute("""CREATE TABLE IF NOT EXISTS Tuesday(
-    Tuesday_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    place text,
-    time text,
-    free int
-    username text,
-    people text
-    )""")
-
-c.execute("""CREATE TABLE IF NOT EXISTS Wednesday(
-    Wednesday_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    place text,
-    time text,
-    free int
-    username text,
-    people text
-    )""")
-
-c.execute("""CREATE TABLE IF NOT EXISTS Thursday(
-    Thursday_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    place text,
-    time text,
-    free int
-    username text,
-    people text
-    )""")
-
-c.execute("""CREATE TABLE IF NOT EXISTS Friday(
-    Friday_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    place text,
-    time text,
-    free int
-    username text,
-    people text
-    )""")
-
-c.execute("""CREATE TABLE IF NOT EXISTS Saturday(
-    Saturday_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    place text,
-    time text,
-    free int
-    username text,
-    people text
-    )""")
-
-c.execute("""CREATE TABLE IF NOT EXISTS Sunday(
+c.execute("""CREATE TABLE IF NOT EXISTS Record(
     Sunday_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    day text,
     place text,
     time text,
     free int
