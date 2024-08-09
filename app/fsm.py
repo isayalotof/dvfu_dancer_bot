@@ -2,10 +2,12 @@ from aiogram.fsm.state import StatesGroup, State
 
 
 class Reg(StatesGroup):
+    username = State()
     place = State()
+    day = State()
     time_start = State()
-    time_end = State()
-    group = State()
+    duration = State()
+    people_group = State()
 
 
 
