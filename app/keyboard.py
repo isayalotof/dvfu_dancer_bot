@@ -4,29 +4,18 @@ from datetime import datetime, timedelta
 from app import handlers
 from data.data_base import c
 
-from data.datatime import get_booked_intervals, get_available_slots, calculate_available_durations
+from data.datatime import get_booked_intervals, get_available_slots, calculate_available_durations, get_remaining_days_of_week, get_russia_day, get_my_records
 
 
 main = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text='Новая запись'), KeyboardButton(text='Мой профиль')],
+        [KeyboardButton(text='Новая запись'), KeyboardButton(text='Мои записи')],
         [KeyboardButton(text='Информация')]
     ],
     resize_keyboard=True
 )
 
 
-days = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [InlineKeyboardButton(text='Понедельник', callback_data='day_1')],
-        [InlineKeyboardButton(text='Вторник', callback_data='day_2')],
-        [InlineKeyboardButton(text='Среда', callback_data='day_3')],
-        [InlineKeyboardButton(text='Четверг', callback_data='day_4')],
-        [InlineKeyboardButton(text='Пятница', callback_data='day_5')],
-        [InlineKeyboardButton(text='Суббота', callback_data='day_6')],
-        [InlineKeyboardButton(text='Воскресенье', callback_data='day_7')],
-    ]
-)
 place = InlineKeyboardMarkup(
     inline_keyboard=[
         [InlineKeyboardButton(text='Place1', callback_data='Place1')],
@@ -35,6 +24,14 @@ place = InlineKeyboardMarkup(
         [InlineKeyboardButton(text='Place4', callback_data='Place4')],
     ]
 )
+
+
+async def days():
+    keyboard = InlineKeyboardBuilder()
+    available_days = get_remaining_days_of_week()
+    for day in available_days:
+        keyboard.add(InlineKeyboardButton(text=day, callback_data=day))
+    return keyboard.adjust(1).as_markup()
 
 
 async def durations():
@@ -54,3 +51,17 @@ async def available_slot():
     for slot in available_slots:
         keyboard.add(InlineKeyboardButton(text=slot.strftime('%H:%M'), callback_data=f'{slot.strftime('%H:%M')}'))
     return keyboard.adjust(2).as_markup()
+
+
+async def get_rec():
+    keyboard = InlineKeyboardBuilder()
+    day = get_my_records(handlers.user_named)
+    if 'У вас нет ни одной записи' in day[0]:
+        keyboard.add(InlineKeyboardButton(text='У вас нет ни одной записи', callback_data=f'empty_rec'))
+        return keyboard.adjust(1).as_markup()
+    else:
+        for d in day:
+            keyboard.add(InlineKeyboardButton(text=f'Запись на {d[0]}, площадка - {d[1]}', callback_data=f'rec_{d}'))
+        return keyboard.adjust(1).as_markup()
+
+

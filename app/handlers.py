@@ -4,7 +4,8 @@ from aiogram.types import Message, CallbackQuery
 from app import keyboard as kb, fsm
 from aiogram.fsm.context import FSMContext
 import sqlite3
-from datetime import datetime, timedelta
+from main import bot
+from data.datatime import get_date_of_weekday
 
 
 db_path = "data.db"  # Путь к вашей базе данных
@@ -40,9 +41,14 @@ async def new_record(message: Message, state: FSMContext):
     await message.answer('Выберите площадку:', reply_markup=kb.place)
 
 
+@router.message(F.text == 'Мои записи')
+async def new_record(message: Message):
+    await message.answer('Ваши записи:', reply_markup=await kb.get_rec())
+
+
 @router.callback_query(F.data == 'Place1')
 async def set_place(callback: CallbackQuery, state: FSMContext):
-    if 0 in c.execute(f"""SELECT Place1 FROM user WHERE user_name = {user_named};""").fetchone():
+    if 0 in c.execute(f"""SELECT Place1 FROM user WHERE user_name = {callback.from_user.id};""").fetchone():
         await callback.message.edit_text('У вас не осталось записей на эту площадку\n'
                                          ' попробуйте выбрать другую или приходите в понедельник:',
                                          reply_markup=kb.place)
@@ -51,49 +57,49 @@ async def set_place(callback: CallbackQuery, state: FSMContext):
         await state.update_data(place='Place1')
         s['Place'] = 'Place1'
         await state.set_state(fsm.Reg.day)
-        await callback.message.edit_text(f'Выберите день для записи: ', reply_markup=kb.days)
+        await callback.message.edit_text(f'Выберите день для записи: ', reply_markup=await kb.days())
 
 
 @router.callback_query(F.data == 'Place2')
 async def set_place(callback: CallbackQuery, state: FSMContext):
-    if 0 in c.execute(f"""SELECT Place2 FROM user WHERE user_name = {user_named};"""):
+    if 0 in c.execute(f"""SELECT Place2 FROM user WHERE user_name = {callback.from_user.id};"""):
         await callback.message.edit_text('У вас не осталось записей на эту площадку\n'
-                                         ' попробуйте выбрать другую или приходите в понедельник:', reply_markup=kb.place)
+                                         ' попробуйте выбрать другую или приходите в понедельник:', reply_markup=await kb.days())
     else:
         await callback.answer('')
         await state.update_data(place='Place2')
         s['Place'] = 'Place2'
         await state.set_state(fsm.Reg.day)
-        await callback.message.edit_text(f'Выберите день для записи: ', reply_markup=kb.days)
+        await callback.message.edit_text(f'Выберите день для записи: ', reply_markup=await kb.days())
 
 
 @router.callback_query(F.data == 'Place3')
 async def set_place(callback: CallbackQuery, state: FSMContext):
-    if 0 in c.execute(f"""SELECT Place3 FROM user WHERE user_name = {user_named};"""):
+    if 0 in c.execute(f"""SELECT Place3 FROM user WHERE user_name = {callback.from_user.id};"""):
         await callback.message.edit_text('У вас не осталось записей на эту площадку\n'
-                                         ' попробуйте выбрать другую или приходите в понедельник:', reply_markup=kb.place)
+                                         ' попробуйте выбрать другую или приходите в понедельник:', reply_markup=await kb.days())
     else:
         await callback.answer('')
         await state.update_data(place='Place3')
         s['Place'] = 'Place3'
         await state.set_state(fsm.Reg.day)
-        await callback.message.edit_text(f'Выберите день для записи: ', reply_markup=kb.days)
+        await callback.message.edit_text(f'Выберите день для записи: ', reply_markup=await kb.days())
 
 
 @router.callback_query(F.data == 'Place4')
 async def set_place(callback: CallbackQuery, state: FSMContext):
-    if 0 in c.execute(f"""SELECT Place4 FROM user WHERE user_name = {user_named};"""):
+    if 0 in c.execute(f"""SELECT Place4 FROM user WHERE user_name = {callback.from_user.id};"""):
         await callback.message.edit_text('У вас не осталось записей на эту площадку\n'
-                                         ' попробуйте выбрать другую или приходите в понедельник:', reply_markup=kb.place)
+                                         ' попробуйте выбрать другую или приходите в понедельник:', reply_markup=await kb.days())
     else:
         await callback.answer('')
         await state.update_data(place='Place4')
         s['Place'] = 'Place4'
         await state.set_state(fsm.Reg.day)
-        await callback.message.edit_text(f'Выберите день для записи: ', reply_markup=kb.days)
+        await callback.message.edit_text(f'Выберите день для записи: ', reply_markup=await kb.days())
 
 
-@router.callback_query(F.data == 'day_1')
+@router.callback_query(F.data == 'понедельник')
 async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
     await state.update_data(day='Monday')
@@ -102,7 +108,7 @@ async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text('Выберите время начала', reply_markup=await kb.available_slot())
 
 
-@router.callback_query(F.data == 'day_2')
+@router.callback_query(F.data == 'Вторник')
 async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
     await state.update_data(day='Tuesday')
@@ -111,7 +117,7 @@ async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text('Выберите время начала', reply_markup=await kb.available_slot())
 
 
-@router.callback_query(F.data == 'day_3')
+@router.callback_query(F.data == 'Среда')
 async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
     await state.update_data(day='Wednesday')
@@ -120,7 +126,7 @@ async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text('Выберите время начала', reply_markup=await kb.available_slot())
 
 
-@router.callback_query(F.data == 'day_4')
+@router.callback_query(F.data == 'Четверг')
 async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
     await state.update_data(day='Thursday')
@@ -129,7 +135,7 @@ async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text('Выберите время начала', reply_markup=await kb.available_slot())
 
 
-@router.callback_query(F.data == 'day_5')
+@router.callback_query(F.data == 'Пятница')
 async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
     await state.update_data(day='Friday')
@@ -138,7 +144,7 @@ async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text('Выберите время начала', reply_markup=await kb.available_slot())
 
 
-@router.callback_query(F.data == 'day_6')
+@router.callback_query(F.data == 'Суббота')
 async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
     await state.update_data(day='Saturday')
@@ -147,7 +153,7 @@ async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text('Выберите время начала', reply_markup=await kb.available_slot())
 
 
-@router.callback_query(F.data == 'day_7')
+@router.callback_query(F.data == 'Воскресенье')
 async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
     await state.update_data(day='Sunday')
@@ -441,6 +447,12 @@ async def empty_handler(message: Message, state: FSMContext):
         c.execute(f"""UPDATE user
         SET {table_name} = 0 WHERE user_name = {user_named};""")
         db.commit()
+        await bot.send_message("-1002186891939",
+                                f"Новая запись на {get_date_of_weekday(data['day'])}:\n"
+                                f"Время начала - {data['time_start']}\n"
+                                f"Длительность записи - {data['duration']}\n"
+                                f"Информация о записанных людях:\n"
+                                f"{data['people_group']}")
         await message.answer('Запись успешно добавлена')
     else:
         await message.answer('Наверное я вас не так понял, проверьте правильность сообщения')

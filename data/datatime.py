@@ -1,5 +1,12 @@
 import sqlite3
 from datetime import datetime, timedelta
+import functools
+import operator
+
+
+def convert_tuple(c_tuple):
+    res_str = functools.reduce(operator.add, c_tuple)
+    return res_str
 
 
 def get_booked_intervals(db_path, table_path, days):
@@ -78,9 +85,78 @@ def calculate_available_durations(start_time_user, booked_intervals):
     return available_durations
 
 
+def get_remaining_days_of_week():
+    # Получаем текущую дату
+    today = datetime.now()
+    # Получаем текущий день недели (0 - понедельник, 6 - воскресенье)
+    current_weekday = today.weekday()
+
+    # Список дней недели
+    days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+
+    # Получаем список оставшихся дней включая сегодняшний
+    remaining_days = days_of_week[current_weekday:]
+
+    return remaining_days
 
 
+def get_date_of_weekday(weekday_name):
+    # Словарь для сопоставления названий дней недели с их номерами
+    weekdays = {
+        "Monday": 0,
+        "Tuesday": 1,
+        "Wednesday": 2,
+        "Thursday": 3,
+        "Friday": 4,
+        "Saturday": 5,
+        "Sunday": 6
+    }
 
+    # Получаем текущую дату
+    today = datetime.now()
+    current_weekday = today.weekday()  # 0 - понедельник, 6 - воскресенье
+
+    target_weekday = weekdays[weekday_name]
+
+    # Вычисляем разницу между текущим днем и целевым днем
+    days_difference = target_weekday - current_weekday
+
+    target_date = today + timedelta(days=days_difference)
+
+    return target_date.date().strftime("%d/%m/%Y")
+
+
+def get_russia_day(weekday_name):
+    weekdays = {
+        ('Monday',): "Понедельник",
+        ('Tuesday',): "Вторник",
+        ('Wednesday',): "Среду",
+        ('Thursday',): "Четверг",
+        ('Friday',): "Пятницу",
+        ('Saturday',): "Субботу",
+        ('Sunday',): "Воскресенье"
+    }
+
+    return weekdays[weekday_name]
+
+
+def get_my_records(user_name):
+    places = ['Place1', 'Place2', 'Place3', 'Place4']
+    days = []
+    conn = sqlite3.connect('data.db')
+    cursor = conn.cursor()
+    for place in places:
+        dai = cursor.execute(f"""SELECT day 
+        FROM {place} 
+        WHERE username = {user_name}""").fetchall()
+        k = dai
+        if len(k) > 0:
+            days.append([f'{get_russia_day(k[0])}', f'{place}'])
+    if len(days) > 0:
+        return days
+    else:
+        days.append('У вас нет ни одной записи')
+        return days
 
 
 
