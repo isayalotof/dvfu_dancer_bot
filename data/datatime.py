@@ -1,24 +1,14 @@
-import sqlite3
+from data.data_base import c
 from datetime import datetime, timedelta
-import functools
-import operator
 
 
-def convert_tuple(c_tuple):
-    res_str = functools.reduce(operator.add, c_tuple)
-    return res_str
-
-
-def get_booked_intervals(db_path, table_path, days):
+def get_booked_intervals(table_path, days):
     # Подключаемся к базе данных
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+    cursor = c
 
     # Получаем занятые интервалы
     cursor.execute(f"SELECT time_start, duration FROM {table_path} WHERE day = ?", (days,))
     booked_intervals = cursor.fetchall()
-
-    conn.close()
 
     # Преобразуем в список временных интервалов
     busy_times = []
@@ -143,8 +133,7 @@ def get_russia_day(weekday_name):
 def get_my_records(user_name):
     places = ['Place1', 'Place2', 'Place3', 'Place4']
     days = []
-    conn = sqlite3.connect('data.db')
-    cursor = conn.cursor()
+    cursor = c
     for place in places:
         dai = cursor.execute(f"""SELECT day 
         FROM {place} 
@@ -157,6 +146,3 @@ def get_my_records(user_name):
     else:
         days.append('У вас нет ни одной записи')
         return days
-
-
-

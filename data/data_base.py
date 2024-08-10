@@ -4,7 +4,6 @@ db = sqlite3.connect('data.db')
 
 c = db.cursor()
 
-
 c.execute("""CREATE TABLE IF NOT EXISTS user(
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_name integer,
@@ -14,16 +13,15 @@ c.execute("""CREATE TABLE IF NOT EXISTS user(
     Place4 integer
     )""")
 
-
 c.execute("""CREATE TABLE IF NOT EXISTS Place1(
     Place1_id INTEGER PRIMARY KEY AUTOINCREMENT,
     username text,
     day text,
     time_start text,
     duration decimal(1,2),
-    people_group text
+    people_group text,
+    mesage_id text
     )""")
-
 
 c.execute("""CREATE TABLE IF NOT EXISTS Place2(
     Place2_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,9 +29,9 @@ c.execute("""CREATE TABLE IF NOT EXISTS Place2(
     day text,
     time_start text,
     duration decimal(1,2),
-    people_group text
+    people_group text,
+    mesage_id text    
     )""")
-
 
 c.execute("""CREATE TABLE IF NOT EXISTS Place3(
     Place3_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,9 +39,9 @@ c.execute("""CREATE TABLE IF NOT EXISTS Place3(
     day text,
     time_start text,
     duration decimal(1,2),
-    people_group text
+    people_group text,
+    mesage_id text    
     )""")
-
 
 c.execute("""CREATE TABLE IF NOT EXISTS Place4(
     Place4_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,33 +49,8 @@ c.execute("""CREATE TABLE IF NOT EXISTS Place4(
     day text,
     time_start text,
     duration decimal(1,2),
-    people_group text
+    people_group text,
+    mesage_id text    
     )""")
 
-
 db.commit()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
