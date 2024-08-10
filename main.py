@@ -1,6 +1,7 @@
 import asyncio
 # import logging
 import os
+from aiogram.methods import DeleteWebhook
 
 from aiogram import Bot, Dispatcher
 from app import handlers
@@ -40,12 +41,10 @@ scheduler = AsyncIOScheduler()
 scheduler.add_job(clean_database, 'interval', weeks=1)  # Очищать раз в неделю
 
 
-async def on_startup(_):
-    scheduler.start()
-
-
 async def main():
+    scheduler.start()
     dp.include_router(handlers.router)
+    await bot(DeleteWebhook(drop_pending_updates=True))
     await dp.start_polling(bot)
 
 

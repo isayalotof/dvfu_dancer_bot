@@ -31,6 +31,13 @@ async def cmd_start(message: Message):
 
 @router.message(F.text == 'Новая запись')
 async def new_record(message: Message, state: FSMContext):
+    if message.from_user.id in c.execute("""SELECT user_name FROM user""").fetchall():
+        pass
+    else:
+        c.execute(f"""INSERT INTO user(user_name, Place1, Place2, Place3, Place4)
+        VALUES('{message.from_user.id}', 1, 1, 1, 1)
+        """)
+        db.commit()
     global user_named
     user_named = message.from_user.id
     await state.set_state(fsm.Reg.username)
@@ -43,6 +50,13 @@ async def new_record(message: Message, state: FSMContext):
 async def new_record(message: Message):
     global user_named
     user_named = message.from_user.id
+    if message.from_user.id in c.execute("""SELECT user_name FROM user""").fetchall():
+        pass
+    else:
+        c.execute(f"""INSERT INTO user(user_name, Place1, Place2, Place3, Place4)
+        VALUES('{message.from_user.id}', 1, 1, 1, 1)
+        """)
+        db.commit()
     await message.answer('Ваши записи:', reply_markup=await kb.get_rec())
 
 
@@ -53,7 +67,7 @@ async def my_info(message: Message):
 
 @router.callback_query(F.data == 'Place1')
 async def set_place(callback: CallbackQuery, state: FSMContext):
-    if 0 in c.execute(f"""SELECT Place1 FROM user WHERE user_name = {callback.from_user.id};""").fetchone():
+    if 0 in c.execute(f"""SELECT Place1 FROM user WHERE user_name = {callback.from_user.id};""").fetchall():
         await callback.answer('')
         await callback.message.edit_text('У вас не осталось записей на эту площадку\n'
                                          'попробуйте выбрать другую или приходите в понедельник:',
@@ -69,7 +83,7 @@ async def set_place(callback: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data == 'Place2')
 async def set_place(callback: CallbackQuery, state: FSMContext):
-    if 0 in c.execute(f"""SELECT Place2 FROM user WHERE user_name = {callback.from_user.id};"""):
+    if 0 in c.execute(f"""SELECT Place2 FROM user WHERE user_name = {callback.from_user.id};""").fetchall():
         await callback.answer('')
         await callback.message.edit_text('У вас не осталось записей на эту площадку\n'
                                          'попробуйте выбрать другую или приходите в понедельник:',
@@ -85,7 +99,7 @@ async def set_place(callback: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data == 'Place3')
 async def set_place(callback: CallbackQuery, state: FSMContext):
-    if 0 in c.execute(f"""SELECT Place3 FROM user WHERE user_name = {callback.from_user.id};"""):
+    if 0 in c.execute(f"""SELECT Place3 FROM user WHERE user_name = {callback.from_user.id};""").fetchall():
         await callback.answer('')
         await callback.message.edit_text('У вас не осталось записей на эту площадку\n'
                                          'попробуйте выбрать другую или приходите в понедельник:',
@@ -101,7 +115,7 @@ async def set_place(callback: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data == 'Place4')
 async def set_place(callback: CallbackQuery, state: FSMContext):
-    if 0 in c.execute(f"""SELECT Place4 FROM user WHERE user_name = {callback.from_user.id};"""):
+    if 0 in c.execute(f"""SELECT Place4 FROM user WHERE user_name = {callback.from_user.id};""").fetchall():
         await callback.answer('')
         await callback.message.edit_text('У вас не осталось записей на эту площадку\n'
                                          ' попробуйте выбрать другую или приходите в понедельник:',
@@ -671,10 +685,13 @@ async def empty_handler(message: Message, state: FSMContext):
         await state.update_data(people_group=f'{message.text}')
         data = await state.get_data()
         table_name = data['place']
+        if int(data['duration']) == data['duration']:
+            data['duration'] = int(data['duration'])
         mes = await bot.send_message("-1002186891939",
                                      f"Новая запись на {get_date_of_weekday(data['day'])}:\n"
+                                     f"Площадка - {data['place']}\n"
                                      f"Время начала - {data['time_start']}\n"
-                                     f"Длительность записи - {data['duration']}\n"
+                                     f"Длительность записи - {data['duration']} часа\n"
                                      f"Информация о записанных людях:\n"
                                      f"{data['people_group']}")
         c.execute(f"""
