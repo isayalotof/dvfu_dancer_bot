@@ -60,8 +60,7 @@ async def get_rec(username):
     day = get_my_records(username)
     if 'У вас нет ни одной записи' in day[0]:
         keyboard.add(InlineKeyboardButton(text='У вас нет ни одной записи', callback_data=f'empty_rec'))
-        return keyboard.adjust(1).as_markup()
     else:
         for d in day:
             keyboard.add(InlineKeyboardButton(text=f'Запись на {d[0]}, площадка - {d[1]}', callback_data=f'rect_{d[1]}'))
-        return keyboard.adjust(1).as_markup()
+    return keyboard.adjust(1).as_markup()

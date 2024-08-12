@@ -6,8 +6,10 @@ from aiogram.fsm.context import FSMContext
 from main import bot
 from data.datatime import get_date_of_weekday
 from data.data_base import c, db
+import os
 
 db_path = "data.db"
+chanel_id = os.getenv('chanel_id')
 
 router = Router()
 
@@ -124,7 +126,7 @@ async def my_rec_place(callback: CallbackQuery):
 @router.callback_query(F.data.startswith('rec_edit_'))
 async def edit_rec(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
-    await bot.delete_message(chat_id='-1002186891939', message_id=int(
+    await bot.delete_message(chat_id=f'{chanel_id}', message_id=int(
         c.execute(
             f"""SELECT mesage_id FROM {callback.data.replace('rec_edit_', '')}
              WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
@@ -141,7 +143,7 @@ async def edit_rec(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data.startswith('rec_cancellation_'))
 async def edit_rec(callback: CallbackQuery):
     await callback.answer('')
-    await bot.delete_message(chat_id='-1002186891939', message_id=int(
+    await bot.delete_message(chat_id=f'{chanel_id}', message_id=int(
         c.execute(
             f"""SELECT mesage_id FROM {callback.data.replace('rec_cancellation_', '')}
              WHERE username = {str(callback.from_user.id)}""").fetchall()[
@@ -162,7 +164,7 @@ async def empty_handler(message: Message, state: FSMContext):
     data = await state.get_data()
     if int(data['duration']) == data['duration']:
         data['duration'] = int(data['duration'])
-    mes = await bot.send_message("-1002186891939",
+    mes = await bot.send_message(f"{chanel_id}",
                                  f"Новая запись на {get_date_of_weekday(data['day'])}:\n"
                                  f"Площадка - {data['place']}\n"
                                  f"Время начала - {data['time_start']}\n"
