@@ -23,11 +23,12 @@ place = InlineKeyboardMarkup(
 )
 
 
-async def my_menu(rec_place):
+async def my_menu():
+    from app.handlers import rec_plas
     my_men = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text='Редактировать', callback_data=f'rec_edit_{rec_place}')],
-            [InlineKeyboardButton(text='Отменить запись', callback_data=f'rec_cancellation_{rec_place}')],
+            [InlineKeyboardButton(text='Редактировать', callback_data=f'rec_edit_{rec_plas}')],
+            [InlineKeyboardButton(text='Отменить запись', callback_data=f'rec_cancellation_{rec_plas}')],
         ]
     )
     return my_men
@@ -41,24 +42,32 @@ async def days():
     return keyboard.adjust(1).as_markup()
 
 
-async def durations(dur_place, day, time_start):
+async def durations():
+    from app.handlers import s
     keyboards = InlineKeyboardBuilder()
-    for duration in calculate_available_durations(datetime.strptime(time_start, "%H:%M"), get_booked_intervals(dur_place, day)):
+    booked_intervals = get_booked_intervals(s['Place'], s['day'])
+    start_time_user = datetime.strptime(s['time_start'], "%H:%M")
+    available_durations = calculate_available_durations(start_time_user, booked_intervals)
+    for duration in available_durations:
         keyboards.add(InlineKeyboardButton(text=f"{duration.seconds // 3600}:{(duration.seconds // 60) % 60:02}",
                                            callback_data=f"{duration.seconds // 3600}:{(duration.seconds // 60) % 60:02}"))
     return keyboards.adjust(2).as_markup()
 
 
-async def available_slot(av_place, day):
+async def available_slot():
+    from app.handlers import s
     keyboard = InlineKeyboardBuilder()
-    for slot in get_available_slots(get_booked_intervals(av_place, day)):
+    booked_intervals = get_booked_intervals(s['Place'], s['day'])
+    available_slots = get_available_slots(booked_intervals)
+    for slot in available_slots:
         keyboard.add(InlineKeyboardButton(text=slot.strftime('%H:%M'), callback_data=f'{slot.strftime('%H:%M')}'))
     return keyboard.adjust(2).as_markup()
 
 
-async def get_rec(username):
+async def get_rec():
+    from app.handlers import user_named
     keyboard = InlineKeyboardBuilder()
-    day = get_my_records(username)
+    day = get_my_records(user_named)
     if 'У вас нет ни одной записи' in day[0]:
         keyboard.add(InlineKeyboardButton(text='У вас нет ни одной записи', callback_data=f'empty_rec'))
         return keyboard.adjust(1).as_markup()
