@@ -8,6 +8,7 @@ from app import handlers
 import sqlite3
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dotenv import find_dotenv, load_dotenv
+from data.data_base import c, db
 
 load_dotenv(find_dotenv())
 
@@ -21,19 +22,20 @@ def clean_database():
 
     # Ваш SQL-запрос для очистки базы данных
     cursor.execute("DELETE FROM Place1")  # Укажите имя вашей таблицы
+    conn.commit()
     cursor.execute("DELETE FROM Place2")
+    conn.commit()
     cursor.execute("DELETE FROM Place3")
+    conn.commit()
     cursor.execute("DELETE FROM Place4")
+    conn.commit()
     cursor.execute(f"""UPDATE user
     SET Place1 = 1,
         Place2 = 1,
         Place3 = 1,
-        Place4 = 1,
+        Place4 = 1;
         """)
-
     conn.commit()
-    conn.close()
-    print("База данных очищена")
 
 
 # Создаем и настраиваем планировщик
@@ -51,6 +53,8 @@ async def main():
 if __name__ == '__main__':
     # logging.basicConfig(level=logging.INFO)
     try:
+        print("Start")
         asyncio.run(main())
     except KeyboardInterrupt:
+        db.close()
         print("Exit")

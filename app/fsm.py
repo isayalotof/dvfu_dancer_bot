@@ -1,7 +1,7 @@
 from aiogram.fsm.state import StatesGroup, State
 
 
-class Reg(StatesGroup):
+class Registration(StatesGroup):
     username = State()
     place = State()
     day = State()
