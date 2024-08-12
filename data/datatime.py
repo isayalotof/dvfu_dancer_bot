@@ -130,6 +130,20 @@ def get_russia_day(weekday_name):
     return weekdays[weekday_name]
 
 
+def get_eng_day(weekday_name):
+    weekdays = {
+        "Понедельник": 'Monday',
+        "Вторник": 'Tuesday',
+        "Среда": 'Wednesday',
+        "Четверг": 'Thursday',
+        "Пятница": 'Friday',
+        "Суббота": 'Saturday',
+        "Воскресенье": 'Sunday'
+    }
+
+    return weekdays[weekday_name]
+
+
 def get_my_records(user_name):
     places = ['Place1', 'Place2', 'Place3', 'Place4']
     days = []
