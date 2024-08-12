@@ -67,7 +67,8 @@ async def my_info(message: Message):
 async def set_place(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
     if 0 in [row[0] for row in
-             c.execute(f"SELECT {callback.data.replace('Place_', '')} FROM user WHERE user_name = ?", (callback.from_user.id,)).fetchall()]:
+             c.execute(f"SELECT {callback.data.replace('Place_', '')} FROM user WHERE user_name = ?",
+                       (callback.from_user.id,)).fetchall()]:
         await callback.message.edit_text(
             'У вас не осталось записей на эту площадку\n'
             'попробуйте выбрать другую или приходите позже:',
@@ -116,14 +117,17 @@ async def set_place(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data.startswith('rect_'))
 async def my_rec_place(callback: CallbackQuery):
     await callback.answer('')
-    await callback.message.edit_text(f"Запись на {callback.data.replace('rect_','')}, что хотите сделать?", reply_markup=await kb.my_menu(callback.data.replace('rect_','')))
+    await callback.message.edit_text(f"Запись на {callback.data.replace('rect_', '')}, что хотите сделать?",
+                                     reply_markup=await kb.my_menu(callback.data.replace('rect_', '')))
 
 
 @router.callback_query(F.data.startswith('rec_edit_'))
 async def edit_rec(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
     await bot.delete_message(chat_id='-1002186891939', message_id=int(
-        c.execute(f"""SELECT mesage_id FROM {callback.data.replace('rec_edit_', '')} WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
+        c.execute(
+            f"""SELECT mesage_id FROM {callback.data.replace('rec_edit_', '')}
+             WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
     c.execute(f"""DELETE FROM {callback.data.replace('rec_edit_', '')} WHERE username = {callback.from_user.id}""")
     db.commit()
     await state.set_state(fsm.Registration.username)
@@ -138,10 +142,16 @@ async def edit_rec(callback: CallbackQuery, state: FSMContext):
 async def edit_rec(callback: CallbackQuery):
     await callback.answer('')
     await bot.delete_message(chat_id='-1002186891939', message_id=int(
-        c.execute(f"""SELECT mesage_id FROM {callback.data.replace('rec_cancellation_', '')} WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
-    c.execute(f"""DELETE FROM {callback.data.replace('rec_cancellation_', '')} WHERE username = '{callback.from_user.id}'""")
+        c.execute(
+            f"""SELECT mesage_id FROM {callback.data.replace('rec_cancellation_', '')}
+             WHERE username = {str(callback.from_user.id)}""").fetchall()[
+            0][0]))
+    c.execute(
+        f"""DELETE FROM {callback.data.replace('rec_cancellation_', '')}
+         WHERE username = '{callback.from_user.id}'""")
     db.commit()
-    c.execute(f'UPDATE user SET {callback.data.replace('rec_cancellation_', '')} = 1 WHERE user_name = {callback.from_user.id}')
+    c.execute(
+        f'UPDATE user SET {callback.data.replace('rec_cancellation_', '')} = 1 WHERE user_name = {callback.from_user.id}')
     db.commit()
     await callback.message.edit_text('Запись отменена')
 
