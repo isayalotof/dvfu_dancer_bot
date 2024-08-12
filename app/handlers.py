@@ -548,8 +548,8 @@ async def my_rec_place(callback: CallbackQuery):
 @router.callback_query(F.data == 'rec_edit_Place1')
 async def edit_rec(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
-    mes_id = c.execute(f"""SELECT mesage_id FROM Place1 WHERE username = {str(callback.from_user.id)}""").fetchall()
-    await bot.delete_message(chat_id='-1002186891939', message_id=int(mes_id[0][0]))
+    await bot.delete_message(chat_id='-1002186891939', message_id=int(
+        c.execute(f"""SELECT mesage_id FROM Place1 WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
     c.execute(f"""DELETE FROM Place1 WHERE username = {callback.from_user.id}""")
     db.commit()
     await state.set_state(fsm.Registration.username)
@@ -563,8 +563,8 @@ async def edit_rec(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == 'rec_edit_Place2')
 async def edit_rec(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
-    mes_id = c.execute(f"""SELECT mesage_id FROM Place2 WHERE username = {str(callback.from_user.id)}""").fetchall()
-    await bot.delete_message(chat_id='-1002186891939', message_id=int(mes_id[0][0]))
+    await bot.delete_message(chat_id='-1002186891939', message_id=int(
+        c.execute(f"""SELECT mesage_id FROM Place2 WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
     c.execute(f"""DELETE FROM Place2 WHERE username = {callback.from_user.id}""")
     db.commit()
     await state.set_state(fsm.Registration.username)
@@ -578,8 +578,8 @@ async def edit_rec(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == 'rec_edit_Place3')
 async def edit_rec(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
-    mes_id = c.execute(f"""SELECT mesage_id FROM Place3 WHERE username = {str(callback.from_user.id)}""").fetchall()
-    await bot.delete_message(chat_id='-1002186891939', message_id=int(mes_id[0][0]))
+    await bot.delete_message(chat_id='-1002186891939', message_id=int(
+        c.execute(f"""SELECT mesage_id FROM Place3 WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
     c.execute(f"""DELETE FROM Place3 WHERE username = {callback.from_user.id}""")
     db.commit()
     await state.set_state(fsm.Registration.username)
@@ -593,8 +593,8 @@ async def edit_rec(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == 'rec_edit_Place4')
 async def edit_rec(callback: CallbackQuery, state: FSMContext):
     await callback.answer('')
-    mes_id = c.execute(f"""SELECT mesage_id FROM Place4 WHERE username = {str(callback.from_user.id)}""").fetchall()
-    await bot.delete_message(chat_id='-1002186891939', message_id=int(mes_id[0][0]))
+    await bot.delete_message(chat_id='-1002186891939', message_id=int(
+        c.execute(f"""SELECT mesage_id FROM Place4 WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
     c.execute(f"""DELETE FROM Place4 WHERE username = {callback.from_user.id}""")
     db.commit()
     await state.set_state(fsm.Registration.username)
@@ -608,8 +608,8 @@ async def edit_rec(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == 'rec_cancellation_Place1')
 async def edit_rec(callback: CallbackQuery):
     await callback.answer('')
-    mes_id = c.execute(f"""SELECT mesage_id FROM Place1 WHERE username = {str(callback.from_user.id)}""").fetchall()
-    await bot.delete_message(chat_id='-1002186891939', message_id=int(mes_id[0][0]))
+    await bot.delete_message(chat_id='-1002186891939', message_id=int(
+        c.execute(f"""SELECT mesage_id FROM Place1 WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
     c.execute(f"""DELETE FROM Place1 WHERE username = '{callback.from_user.id}'""")
     db.commit()
     c.execute(f'UPDATE user SET Place1 = 1 WHERE user_name = {callback.from_user.id}')
@@ -620,8 +620,8 @@ async def edit_rec(callback: CallbackQuery):
 @router.callback_query(F.data == 'rec_cancellation_Place2')
 async def edit_rec(callback: CallbackQuery):
     await callback.answer('')
-    mes_id = c.execute(f"""SELECT mesage_id FROM Place2 WHERE username = {str(callback.from_user.id)}""").fetchall()
-    await bot.delete_message(chat_id='-1002186891939', message_id=int(mes_id[0][0]))
+    await bot.delete_message(chat_id='-1002186891939', message_id=int(
+        c.execute(f"""SELECT mesage_id FROM Place2 WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
     c.execute(f"""DELETE FROM Place2 WHERE username = '{callback.from_user.id}'""")
     db.commit()
     c.execute(f'UPDATE user SET Place2 = 1 WHERE user_name = {callback.from_user.id}')
@@ -632,8 +632,8 @@ async def edit_rec(callback: CallbackQuery):
 @router.callback_query(F.data == 'rec_cancellation_Place3')
 async def edit_rec(callback: CallbackQuery):
     await callback.answer('')
-    mes_id = c.execute(f"""SELECT mesage_id FROM Place3 WHERE username = {str(callback.from_user.id)}""").fetchall()
-    await bot.delete_message(chat_id='-1002186891939', message_id=int(mes_id[0][0]))
+    await bot.delete_message(chat_id='-1002186891939', message_id=int(
+        c.execute(f"""SELECT mesage_id FROM Place3 WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
     c.execute(f"""DELETE FROM Place3 WHERE username = '{callback.from_user.id}'""")
     db.commit()
     c.execute(f'UPDATE user SET Place3 = 1 WHERE user_name = {callback.from_user.id}')
@@ -644,8 +644,8 @@ async def edit_rec(callback: CallbackQuery):
 @router.callback_query(F.data == 'rec_cancellation_Place4')
 async def edit_rec(callback: CallbackQuery):
     await callback.answer('')
-    mes_id = c.execute(f"""SELECT mesage_id FROM Place4 WHERE username = {str(callback.from_user.id)}""").fetchall()
-    await bot.delete_message(chat_id='-1002186891939', message_id=int(mes_id[0][0]))
+    await bot.delete_message(chat_id='-1002186891939', message_id=int(
+        c.execute(f"""SELECT mesage_id FROM Place4 WHERE username = {str(callback.from_user.id)}""").fetchall()[0][0]))
     c.execute(f"""DELETE FROM Place4 WHERE username = '{callback.from_user.id}'""")
     db.commit()
     c.execute(f'UPDATE user SET Place4 = 1 WHERE user_name = {callback.from_user.id}')
