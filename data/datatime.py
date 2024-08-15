@@ -152,11 +152,17 @@ def get_my_records(user_name):
         dai = cursor.execute(f"""SELECT day 
         FROM {place} 
         WHERE username = {user_name}""").fetchall()
-        k = dai
-        if len(k) > 0:
-            days.append([f'{get_russia_day(k[0])}', f'{place}'])
+        if len(dai) > 0:
+            days.append([f'{get_russia_day(dai[0])}', f'{place}'])
     if len(days) > 0:
         return days
     else:
         days.append('У вас нет ни одной записи')
         return days
+
+
+def calculate_duration(duration):
+    hours = duration.seconds / 3600
+    rounded_hours = round(hours * 2) / 2
+    return rounded_hours
+

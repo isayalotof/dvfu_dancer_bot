@@ -3,7 +3,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from datetime import datetime
 
 from data.datatime import get_booked_intervals, get_available_slots, calculate_available_durations, \
-    get_remaining_days_of_week, get_my_records, get_eng_day
+    get_remaining_days_of_week, get_my_records, get_eng_day, calculate_duration
 
 main = ReplyKeyboardMarkup(
     keyboard=[
@@ -44,7 +44,7 @@ async def durations(dur_place, day, time_start):
     keyboards = InlineKeyboardBuilder()
     for duration in calculate_available_durations(datetime.strptime(time_start, "%H:%M"), get_booked_intervals(dur_place, day)):
         keyboards.add(InlineKeyboardButton(text=f"{duration.seconds // 3600}:{(duration.seconds // 60) % 60:02}",
-                                           callback_data=f"av_slot_{duration.seconds // 3600}.{(duration.seconds // 60) % 60:02}"))
+                                           callback_data=f"av_slot_{calculate_duration(duration)}"))
     return keyboards.adjust(2).as_markup()
 
 
